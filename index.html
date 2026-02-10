@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Grupo Nacional PC - Ministerio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e5a6e 0%, #028090 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #1e5a6e;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            padding: 20px;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #028090;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #1e5a6e;
+            box-shadow: 0 0 0 3px rgba(2, 128, 144, 0.1);
+        }
+        
+        .categories {
+            padding: 20px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .category-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .cat-resistencias {
+            background: #ffe6e6;
+            color: #990011;
+        }
+        
+        .cat-viabilidad {
+            background: #e6f3ff;
+            color: #0066cc;
+        }
+        
+        .cat-ministerio {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .cat-seguridad {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        
+        .cat-conflicto {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+        
+        .category-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-badge.active {
+            border-color: currentColor;
+            font-weight: 700;
+        }
+        
+        .faq-container {
+            padding: 20px;
+        }
+        
+        .faq-item {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .faq-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .faq-question {
+            padding: 18px 20px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1e5a6e;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .faq-item.resistencias .faq-question { border-left-color: #990011; }
+        .faq-item.viabilidad .faq-question { border-left-color: #0066cc; }
+        .faq-item.ministerio .faq-question { border-left-color: #2e7d32; }
+        .faq-item.seguridad .faq-question { border-left-color: #e65100; }
+        .faq-item.conflicto .faq-question { border-left-color: #6a1b9a; }
+        
+        .faq-question:hover {
+            background: #f8f8f8;
+        }
+        
+        .faq-question.active {
+            background: #f0f7f9;
+        }
+        
+        .icon {
+            transition: transform 0.3s;
+            font-size: 20px;
+            color: #028090;
+        }
+        
+        .faq-question.active .icon {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #fafafa;
+        }
+        
+        .faq-answer.show {
+            max-height: 2000px;
+        }
+        
+        .faq-answer-content {
+            padding: 20px;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        .faq-answer-content strong {
+            color: #1e5a6e;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .faq-answer-content em {
+            color: #666;
+            font-style: normal;
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+        
+        .tip strong {
+            color: #2e7d32;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .categories {
+                flex-direction: column;
+            }
+            
+            .category-badge {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Preguntas Grupo Nacional Prescripción Enfermera</h1>
+            <p>Ministerio de Sanidad - Febrero 2026 | Consulta rápida durante reunión</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar por palabra clave (resistencias, médicos, recursos, seguridad...)">
+        </div>
+        
+        <div class="categories">
+            <div class="category-badge cat-resistencias" data-category="resistencias">🚧 Resistencias</div>
+            <div class="category-badge cat-viabilidad" data-category="viabilidad">💰 Viabilidad/Recursos</div>
+            <div class="category-badge cat-ministerio" data-category="ministerio">🏛️ Rol Ministerio</div>
+            <div class="category-badge cat-seguridad" data-category="seguridad">🛡️ Seguridad/Evidencia</div>
+            <div class="category-badge cat-conflicto" data-category="conflicto">⚡ Preguntas Conflictivas</div>
+        </div>
+        
+        <div class="faq-container" id="faqContainer">
+            <!-- BLOQUE 1: RESISTENCIAS -->
+            <div class="faq-item resistencias">
+                <div class="faq-question">
+                    <span>¿Cómo gestionáis las resistencias del colectivo médico?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <strong>VALIDAR:</strong> "Es una pregunta fundamental."
+                        
+                        <strong>RESPONDER:</strong>
+                        Lo primero es <em>entender de dónde vienen esas resistencias</em>. En nuestro estudio hemos visto que no siempre es oposición ideológica. Muchas veces es inseguridad sobre cómo va a cambiar su práctica diaria, falta de información, o preocupación legítima por la seguridad del paciente.
+                        
+                        <strong>Nuestra propuesta se basa en tres pilares:</strong>
+                        
+                        <strong>1. Espacios de coordinación clínica formales y estructurados</strong>
+                        No pueden ser encuentros casuales en el pasillo. Tienen que estar en la agenda, con tiempo protegido.
+                        
+                        <strong>2. Protocolos consensuados</strong>
+                        Que el médico sepa exactamente qué va a prescribir la enfermera, en qué condiciones, con qué seguimiento. Eso da seguridad.
+                        
+                        <strong>3. Figuras referentes que actúen como puentes</strong>
+                        Enfermeras con experiencia que puedan resolver dudas, mostrar casos de éxito, construir confianza en el día a día.
+                        
+                        <div class="tip">
+                            <strong>CIERRE CONTUNDENTE:</strong> Pero seamos claros: <em>esto no se resuelve solo con buena voluntad. Necesita gobernanza institucional que envíe un mensaje claro de que esto es política de sistema, no opcional</em>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item resistencias">
+                <div class="faq-question">
+                    <span>¿Qué hacemos si un equipo directivo o gerencia no apoya la implantación?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Por eso insistimos tanto en que esto tiene que venir <em>con mandato institucional explícito</em>.
+                        
+                        <strong>EL PROBLEMA:</strong>
+                        Si la gerencia no lo apoya, es porque probablemente no está en sus objetivos de gestión, no tiene incentivos, y no hay consecuencias por no hacerlo.
+                        
+                        <strong>NUESTRA PROPUESTA:</strong>
+                        Que la prescripción colaborativa se integre en:
+                        • Contratos programa
+                        • Cuadros de mando de Atención Primaria
+                        • Objetivos anuales evaluables
+                        
+                        <div class="tip">
+                            <strong>FRASE POTENTE:</strong> Cuando algo está en el cuadro de mando, <em>existe</em>. Cuando no está, no existe, por mucho marco legal que haya.
+                            
+                            Y si queremos ser honestos: también necesitamos que el Ministerio y las consejerías envíen señales claras de que esto es prioritario.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item resistencias">
+                <div class="faq-question">
+                    <span>¿Y las resistencias internas del propio colectivo enfermero?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Absolutamente. En el estudio también hemos identificado <em>resistencias dentro del propio colectivo enfermero</em>.
+                        
+                        Algunas profesionales nos decían: "prefiero no prescribir, no quiero la responsabilidad", "no me siento segura", "no tengo tiempo".
+                        
+                        <strong>Esto nos señala dos cosas:</strong>
+                        
+                        <strong>1. No podemos obligar a nadie a prescribir</strong>
+                        Por eso hablamos de prescripción colaborativa como <em>competencia avanzada</em>, no como obligación universal.
+                        
+                        <strong>2. Las que sí quieren hacerlo, necesitan condiciones</strong>
+                        Formación continua, tiempo protegido, acompañamiento, sistemas informáticos que funcionen...
+                        
+                        <div class="tip">
+                            <strong>MENSAJE CLAVE:</strong> El objetivo no es que el 100% de las enfermeras prescriban. El objetivo es que <em>las que quieren y están preparadas, puedan hacerlo con garantías</em>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BLOQUE 2: VIABILIDAD -->
+            <div class="faq-item viabilidad">
+                <div class="faq-question">
+                    <span>¿De dónde sacamos los recursos? ¿Quién lo paga?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Es la pregunta del millón. Y la respuesta honesta es: <em>esto requiere inversión inicial, sí</em>.
+                        
+                        <strong>PERSPECTIVA:</strong>
+                        Actualmente el SNS tiene miles de enfermeras formadas en prescripción colaborativa que no están prescribiendo. Eso es un recurso infrautilizado en el que ya se invirtió.
+                        
+                        <strong>Lo que proponemos NO es crear un sistema paralelo:</strong>
+                        • Reasignar tiempo ya existente (las referentes no son plazas nuevas)
+                        • Integrar la formación en los planes ya establecidos
+                        • Usar sistemas informáticos que ya tenemos, solo actualizarlos
+                        
+                        <strong>RETORNO DE INVERSIÓN:</strong>
+                        Si conseguimos que las enfermeras gestionen renovaciones, ajustes de dosis, seguimientos... estamos <em>liberando tiempo médico para casos más complejos</em>. Eso es eficiencia del sistema.
+                        
+                        <div class="tip">
+                            <strong>SER HONESTA:</strong> Pero claro, no va a ser gratis. Y si no estamos dispuestos a invertir, mejor seamos honestos y no hagamos como que queremos implantarlo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item viabilidad">
+                <div class="faq-question">
+                    <span>Los plazos que proponéis ¿son realistas?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Son <em>orientativos y adaptables</em>.
+                        
+                        <strong>RECONOCER DIVERSIDAD:</strong>
+                        De hecho, Susana Rodríguez nos señaló que muchas comunidades ya han hecho la adaptación de protocolos. Otras están en proceso. Andalucía tiene pendiente terminar algunas.
+                        
+                        <strong>LO IMPORTANTE:</strong>
+                        No son los plazos exactos. Es la <em>secuencia lógica</em>:
+                        1. No puedes formar sin tener protocolos claros
+                        2. No puedes implementar sin haber formado
+                        3. No puedes consolidar sin haber evaluado
+                        
+                        <div class="tip">
+                            Cada comunidad irá a su ritmo. Pero lo que <em>no puede pasar</em> es que esto siga sin avanzar porque "nunca es el momento".
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BLOQUE 3: ROL MINISTERIO -->
+            <div class="faq-item ministerio">
+                <div class="faq-question">
+                    <span>¿Qué esperáis concretamente del Ministerio?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Lo que proponemos es un rol <em>normativo, impulsor y coordinador</em>:
+                        
+                        <strong>NORMATIVO:</strong>
+                        • Definición operativa común de prescripción colaborativa para todo el SNS
+                        • Que en todas las comunidades se entienda lo mismo
+                        
+                        <strong>IMPULSOR:</strong>
+                        • Que la prescripción colaborativa sea tema de Consejo Interterritorial
+                        • Que haya seguimiento, rendición de cuentas
+                        
+                        <strong>COORDINADOR:</strong>
+                        • Cuadro de mando SNS compartido con indicadores comunes
+                        • Intercambio de buenas prácticas entre comunidades
+                        • Apoyo metodológico para las que van más retrasadas
+                        
+                        <div class="tip">
+                            <strong>CLARIFICAR ROLES:</strong> No se trata de que el Ministerio <em>haga</em> la implementación. Eso es competencia autonómica. Pero sí que <em>lidere el marco</em> y garantice que esto no sea tema de voluntarismo territorial.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item ministerio">
+                <div class="faq-question">
+                    <span>¿Por qué después de tantos años con marco legal, esto sigue sin funcionar?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Exactamente. <em>Esa es la paradoja que hemos estudiado</em>.
+                        
+                        <strong>LA PARADOJA:</strong>
+                        • Marco legal desde 2018
+                        • Miles de enfermeras formadas
+                        • Protocolos clínicos existentes
+                        • Y sin embargo: solo 23% ejercen en Andalucía
+                        
+                        <strong>NUESTRA CONCLUSIÓN:</strong>
+                        El problema no es técnico, es <em>organizativo y sistémico</em>.
+                        
+                        <strong>Ha funcionado donde:</strong>
+                        • Ha habido liderazgo institucional explícito
+                        • Se ha integrado en objetivos de gestión
+                        • Ha habido estructuras de soporte (referentes, formación continua, sistemas informáticos)
+                        
+                        <strong>Ha fracasado donde:</strong>
+                        Se ha dejado a iniciativa individual. Donde se ha dicho "ya tenéis permiso, ahora arreglaos".
+                        
+                        <div class="tip">
+                            <strong>MENSAJE CLAVE:</strong> Esto no es un problema de competencias profesionales. Es un problema de <em>diseño de sistema</em>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BLOQUE 4: SEGURIDAD -->
+            <div class="faq-item seguridad">
+                <div class="faq-question">
+                    <span>¿Tenéis evidencia de que la prescripción colaborativa es segura?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sí. Hay <em>evidencia internacional robusta</em> de que la prescripción enfermera, cuando está bien protocolizada y con formación adecuada, es segura y efectiva.
+                        
+                        <strong>NUESTRO SISTEMA DE INDICADORES:</strong>
+                        Incluye precisamente seguimiento de eventos adversos. No para demostrar que no pasa nada, sino para <em>monitorizar y ajustar</em> si se detectan problemas.
+                        
+                        <strong>INDICADOR CLAVE:</strong>
+                        "Eventos adversos relacionados con prescripción colaborativa vs. prescripción médica tradicional"
+                        
+                        <strong>Meta:</strong> No inferioridad
+                        
+                        <div class="tip">
+                            Es decir, <em>no tiene que ser perfecta, tiene que ser igual de segura</em>. Y si detectamos problemas, ajustamos protocolos, reforzamos formación, revisamos casos.
+                            
+                            Esto es mejora continua basada en evidencia, no fe ciega.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item seguridad">
+                <div class="faq-question">
+                    <span>¿Qué pasa si hay un evento adverso grave? ¿Quién responde legalmente?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Esa es <em>precisamente</em> una de las barreras que más mencionan las enfermeras. Y es legítima.
+                        
+                        <strong>Por eso en el Decálogo - Principio 2: Seguridad jurídica efectiva</strong>
+                        
+                        Tiene que estar absolutamente claro:
+                        • Qué puede prescribir la enfermera
+                        • En qué condiciones
+                        • Con qué protocolos
+                        • Qué respaldo institucional tiene
+                        
+                        <strong>RESPONSABILIDAD:</strong>
+                        Cuando hay un protocolo claro, publicado oficialmente, y la profesional lo ha seguido... <em>la responsabilidad es del sistema que diseñó ese protocolo, no de la profesional individual</em>.
+                        
+                        <div class="tip">
+                            <strong>REQUISITO:</strong> Pero esto requiere que los protocolos estén actualizados, consensuados y publicados oficialmente. No pueden ser documentos internos difusos.
+                            
+                            Por eso insistimos tanto en finalizar la adaptación territorial de las Guías IUA del Ministerio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BLOQUE 5: PREGUNTAS CONFLICTIVAS -->
+            <div class="faq-item conflicto">
+                <div class="faq-question">
+                    <span>¿No genera esto conflicto entre profesionales en momento de crisis sanitaria?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Al contrario. Creemos que <em>el conflicto ya existe</em>, y precisamente porque esto NO está bien diseñado.
+                        
+                        <strong>DONDE HAY CONFLICTO:</strong>
+                        Cuando no hay claridad normativa, cuando no hay espacios de coordinación, cuando cada uno interpreta como puede... ahí es donde surgen tensiones.
+                        
+                        <strong>LO QUE PROPONEMOS:</strong>
+                        Justo lo contrario: claridad, protocolos consensuados, espacios de diálogo estructurados.
+                        
+                        <strong>OPTIMIZACIÓN DE RECURSOS:</strong>
+                        El SNS necesita optimizar recursos. Tenemos enfermeras formadas que podrían estar gestionando renovaciones de tratamientos crónicos, ajustes de dosis según protocolos, seguimientos... y no lo están haciendo.
+                        
+                        Mientras tanto, los médicos están saturados con agendas imposibles.
+                        
+                        <div class="tip">
+                            <strong>REENCUADRAR:</strong> Esto no es quitar competencias a nadie. Es <em>distribuir el trabajo de forma más inteligente</em> para dar mejor servicio a las personas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item conflicto">
+                <div class="faq-question">
+                    <span>Vuestra propuesta es muy de Andalucía. ¿Cómo se aplica en otras CCAA?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Es una pregunta muy pertinente. Y tenéis razón: <em>nuestro estudio es andaluz</em>.
+                        
+                        <strong>PERO:</strong>
+                        Lo que hemos intentado hacer es identificar <em>principios transferibles</em>, no recetas únicas.
+                        
+                        <strong>EJEMPLOS:</strong>
+                        
+                        • "Red de enfermeras referentes" no significa que todas las comunidades tengan que crear la misma figura. Significa que <em>tiene que haber soporte clínico en contexto real</em>.
+                        
+                        • "Integración en cuadros de mando" no significa que todos usemos los mismos indicadores. Significa que <em>tiene que estar en los sistemas de gestión</em>.
+                        
+                        <div class="tip">
+                            <strong>HUMILDAD:</strong> Por eso hablamos de marcos estratégicos adaptables, no de protocolos cerrados.
+                            
+                            Y de hecho, <em>nos encantaría aprender</em> de lo que están haciendo otras comunidades. El objetivo del Grupo Nacional es precisamente ese: intercambiar buenas prácticas y construir estándares comunes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="no-results hidden" id="noResults">
+            <div class="no-results-icon">🔍</div>
+            <h3>No se encontraron resultados</h3>
+            <p>Prueba con otras palabras clave</p>
+        </div>
+    </div>
+    
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = question.classList.contains('active');
+                
+                // Close all
+                document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('show'));
+                
+                // Open clicked if wasn't active
+                if (!isActive) {
+                    question.classList.add('active');
+                    answer.classList.add('show');
+                }
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const noResults = document.getElementById('noResults');
+        
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            let visibleCount = 0;
+            
+            // Clear category filter
+            document.querySelectorAll('.category-badge').forEach(badge => {
+                badge.classList.remove('active');
+            });
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+            
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+        
+        // Category filter
+        document.querySelectorAll('.category-badge').forEach(badge => {
+            badge.addEventListener('click', () => {
+                const category = badge.dataset.category;
+                const isActive = badge.classList.contains('active');
+                
+                // Clear search
+                searchInput.value = '';
+                
+                // Toggle active state
+                document.querySelectorAll('.category-badge').forEach(b => b.classList.remove('active'));
+                
+                if (isActive) {
+                    // Show all
+                    faqItems.forEach(item => item.classList.remove('hidden'));
+                    noResults.classList.add('hidden');
+                } else {
+                    badge.classList.add('active');
+                    
+                    // Filter by category
+                    let visibleCount = 0;
+                    faqItems.forEach(item => {
+                        if (item.classList.contains(category)) {
+                            item.classList.remove('hidden');
+                            visibleCount++;
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                    
+                    if (visibleCount === 0) {
+                        noResults.classList.remove('hidden');
+                    } else {
+                        noResults.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
